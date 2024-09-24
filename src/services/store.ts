@@ -17,7 +17,7 @@ const rootReducer = combineReducers({
   feed: feed,
   ingredients: ingredients,
   constructorItems: constructor
-}); // Заменить на импорт настоящего редьюсера+
+});
 
 const store = configureStore({
   reducer: rootReducer,

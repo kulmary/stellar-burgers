@@ -11,7 +11,6 @@ import {
 } from '../../services/slices/feed';
 
 export const Feed: FC = () => {
-  /** TODO: взять переменную из стора +*/
   const dispatch = useDispatch();
   const orders = useSelector(getOrders);
   const isLoading = useSelector(getIsOrdersLoading);

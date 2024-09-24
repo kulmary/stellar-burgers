@@ -1,33 +1,34 @@
+import '../../index.css';
+import styles from './app.module.css';
+import { Routes, Route, useLocation, useNavigate } from 'react-router-dom';
 import {
   ConstructorPage,
   Feed,
-  ForgotPassword,
-  Login,
   NotFound404,
+  Login,
   Profile,
-  ProfileOrders,
   Register,
-  ResetPassword
+  ForgotPassword,
+  ResetPassword,
+  ProfileOrders
 } from '@pages';
-import '../../index.css';
-import styles from './app.module.css';
-import { useLocation, useNavigate } from 'react-router-dom';
-import { AppHeader, IngredientDetails, Modal, OrderInfo } from '@components';
-import { Routes, Route } from 'react-router-dom';
-import { useEffect } from 'react';
-import { fetchIngredients } from '../../services/slices/ingredients';
 import { useDispatch } from '../../services/store';
-import { ProtectedRoute } from '../protected-route/protected-route';
+import { AppHeader, Modal, OrderInfo, IngredientDetails } from '@components';
+import { useEffect } from 'react';
 import { checkUserAuth } from '../../services/slices/user';
+import { fetchIngredients } from '../../services/slices/ingredients';
+import { ProtectedRoute } from '../protected-route/protected-route';
 
 const App = () => {
-  const navigate = useNavigate();
   const dispatch = useDispatch();
   const location = useLocation();
+  const navigate = useNavigate();
   const backgroundLocation = location.state?.background;
+
   const goBack = () => {
     navigate(-1);
   };
+
   useEffect(() => {
     dispatch(checkUserAuth());
     dispatch(fetchIngredients());
@@ -43,7 +44,6 @@ const App = () => {
           path='/login'
           element={
             <ProtectedRoute onlyUnauth>
-              {' '}
               <Login />
             </ProtectedRoute>
           }
@@ -72,15 +72,35 @@ const App = () => {
             </ProtectedRoute>
           }
         />
-        <Route
-          path='/profile'
-          element={
-            <ProtectedRoute>
-              <Profile />
-            </ProtectedRoute>
-          }
-        />
-        <Route path='/profile/orders' element={<ProfileOrders />} />
+        <Route path='/profile'>
+          <Route
+            index
+            element={
+              <ProtectedRoute>
+                <Profile />
+              </ProtectedRoute>
+            }
+          />
+          <Route path='orders'>
+            <Route
+              index
+              element={
+                <ProtectedRoute>
+                  <ProfileOrders />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path=':number'
+              element={
+                <ProtectedRoute>
+                  <OrderInfo />
+                </ProtectedRoute>
+              }
+            />
+          </Route>
+        </Route>
+        <Route path='/ingredients/:id' element={<IngredientDetails />} />
         <Route path='*' element={<NotFound404 />} />
       </Routes>
 
@@ -89,7 +109,7 @@ const App = () => {
           <Route
             path='/feed/:number'
             element={
-              <Modal title={'Заказ'} onClose={goBack}>
+              <Modal title={`Заказ`} onClose={goBack}>
                 <OrderInfo />
               </Modal>
             }
@@ -97,7 +117,7 @@ const App = () => {
           <Route
             path='/ingredients/:id'
             element={
-              <Modal title={'Список ингредиентов'} onClose={goBack}>
+              <Modal title='Детали ингредиента' onClose={goBack}>
                 <IngredientDetails />
               </Modal>
             }
@@ -105,7 +125,7 @@ const App = () => {
           <Route
             path='/profile/orders/:number'
             element={
-              <Modal title={'Заказ'} onClose={goBack}>
+              <Modal title='Заказ' onClose={goBack}>
                 <OrderInfo />
               </Modal>
             }

@@ -9,7 +9,6 @@ import { getOrder, getOrderData } from '../../services/slices/order';
 import { getIngredients } from '../../services/slices/ingredients';
 
 export const OrderInfo: FC = () => {
-  /** TODO: взять переменные orderData и ingredients из стора */
   const dispatch = useDispatch();
   const { number: orderIdx } = useParams<{ number: string }>();
   const orderData = useSelector(getOrder);
